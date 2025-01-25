@@ -21,14 +21,14 @@ if [ -z "$3" ]; then
 		echo "Error: Could not fetch the latest tag URL from $TAG_URL"
 		exit 1
 	fi
- 
+
 	TAG=$(basename "$FULL_TAG_URL");
 	echo "Tag URL not provided, using the latest available version: $TAG";
 	echo "You can change it by passing tag URL as third argument for this script.";
 else
 	# Extract the tag name from the provided TAG_URL
 	TAG=$(basename "$TAG_URL")
- 
+
 	# Check if TAG is not empty
 	if [ -z "$TAG" ]; then
 		echo "Error: Could not extract the tag from the provided URL $TAG_URL"
@@ -38,16 +38,15 @@ else
 	fi
 fi
 
-if [ -z "$4" ]; then
+CERTIFICATE_PASSWORD=${4:-}
+
+if [ -n "${1+x}" ]; then
 	echo "Certificate information not provided, using default dev certificate."
-else
-	if [ -f /certificates/author.p12 ] && [ -f /certificates/distributor.p12 ]; then
-		CERTIFICATE_PASSWORD=$4
-	else
-		echo "Certificate information provided but certificate files not found."
-		exit 1
-	fi
-fi	
+	CERTIFICATE_PASSWORD=""
+elif [[ ! -f /certificates/author.p12 || ! -f /certificates/distributor.p12 ]]; then
+	echo "Certificate information provided but certificate files not found."
+	exit 1
+fi
 
 DOWNLOAD_URL=$(echo https://github.com/jeppevinkel/jellyfin-tizen-builds/releases/download/${TAG}/${JELLYFIN_BUILD_OPTION}.wgt);
 
