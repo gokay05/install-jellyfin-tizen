@@ -40,7 +40,7 @@ fi
 
 CERTIFICATE_PASSWORD=${4:-}
 
-if [ -n "${1+x}" ]; then
+if [ -z "${1+x}" ]; then
 	echo "Certificate information not provided, using default dev certificate."
 	CERTIFICATE_PASSWORD=""
 elif [[ ! -f /certificates/author.p12 || ! -f /certificates/distributor.p12 ]]; then
